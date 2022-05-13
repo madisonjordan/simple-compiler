@@ -100,13 +100,13 @@ class ParseTable {
 	protected:						
 	char table[num_nonterm][num_terminal][10] = { 
         {"NT",  "i",     "=",		"+",        "-",        "*",        "/",       "(",     	")",      	";",        "$"},
-        {"S",   "i=E",    "ERROR",   "ERROR",    "ERROR",    "ERROR",     "ERROR",   "ERROR",     "ERROR",   "ERROR",   "\0"  },
+        {"S",   "i=E",    "ERROR",   "ERROR",    "ERROR",    "ERROR",    "ERROR",  "ERROR",     "ERROR",   "ERROR",   "\0"  },
 		{"E",   "TQ",    "ERROR",	"ERROR",    "ERROR",    "ERROR",	"ERROR",   "TQ",    	"ERROR",  	"ERROR",    "ERROR"},
 		{"Q",   "ERROR",  "=TQ",	"+TQ",      "-TQ",      "ERROR",    "ERROR",   "ERROR",     "\0",     	"ERROR",    "\0"},
 		{"T",   "FR",     "ERROR",	"ERROR",    "ERROR",    "ERROR",	"ERROR",   "FR",    	"ERROR",  	"ERROR",    "ERROR"},
 		{"R",   "ERROR",  "\0",     "\0",       "\0",       "*FR",      "/FR",     "ERROR", 	"\0",       "ERROR",    "\0"},
-		{"F",   "iZ",     "ERROR",	"ERROR",    "ERROR",    "ERROR",	"ERROR",   "(E)Z",   	"ERROR",  	"ERROR",    "ERROR"},
-        {"Z",   "ERROR",  "\0",     "\0",		"\0",       "\0",       "\0",      "ERROR",     "\0",       ";S",       "ERROR"}
+		{"F",   "iZ",     "\0",     "\0",		"\0",       "\0",       "\0",      "(E)Z",   	"\0",  	    "\0",    "\0"},
+        {"Z",   "\0",     "\0",     "\0",		"\0",       "\0",       "\0",      "ERROR",     "\0",       ";S",       "ERROR"}
 	};
 
 
@@ -166,7 +166,7 @@ void parser(string input)
         a = terminals.at(next);
 
 		//cout << "\n--------------------------------------------------------\n";
-        
+
         //check if x is a terminal
         if (terminals.count(top)){
             isTerminal = true;

@@ -1,8 +1,0 @@
-function areaofcircle$ [radius:float]
-{
-	float pi = 3.14;
-	return(pi*(radius*radius));
-    bool nan = 3.67.4;
-	1string <- 'hello';
-	test=4;
-}

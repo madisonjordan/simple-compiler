@@ -27,16 +27,18 @@ enum terminals_list {
 	SLASH = 6,
 	LEFTPAREN = 7,
 	RIGHTPAREN = 8,
-	DOLLAR = 9,
+    SEMICOLON = 9,
+	DOLLAR = 10,
 };
 
 enum nonterminals_list{
-    //S = 1,
-    E = 1,
-    Q = 2,
-    T = 3,
-    R = 4,
-    F = 5,
+    S = 1,
+    E = 2,
+    Q = 3,
+    T = 4,
+    R = 5,
+    F = 6,
+    Z = 7,
 };
 
 
@@ -49,14 +51,15 @@ const static map<char, terminals_list> terminals {
   {'/',      SLASH},
   {'(',        LEFTPAREN},
   {')',     RIGHTPAREN},
+  {';',      SEMICOLON},
   {'$',      DOLLAR}
 };
 
 int getNonTerminal(char c){
     switch(c){
-        //case 'S':
-        //    return S;
-        //    break;
+        case 'S':
+            return S;
+            break;
         case 'E':
             return E;
             break;
@@ -71,6 +74,9 @@ int getNonTerminal(char c){
             break;
         case 'F':
             return F;
+            break;
+        case 'Z':
+            return Z;
             break;
         defult:
             break;
@@ -87,18 +93,20 @@ struct ProdRule {
 
 class ParseTable {
 	private:
-		const static int num_terminal = 9+1;
-		const static int num_nonterm = 7;
+		const static int num_terminal = 10+1;
+		const static int num_nonterm = 8;
 
 		// INPUTS
 	protected:						
 	char table[num_nonterm][num_terminal][10] = { 
-        {"NT",  "i",     "=",		"+",        "-",        "*",        "/",       "(",     	")",      	"$"  },
-		{"E",   "TQ",     "ERROR",	"ERROR",    "ERROR",    "ERROR",	"ERROR",   "TQ",    	"ERROR",  	"ERROR"  },
-		{"Q",   "ERROR",  "=TQ",	"+TQ",      "-TQ",      "ERROR",  "ERROR",   "ERROR", 		"\0",     	"\0"  },
-		{"T",   "FR",     "ERROR",	"ERROR",    "ERROR",    "ERROR",	"ERROR",   "FR",    	"ERROR",  	"ERROR"  },
-		{"R",   "ERROR",  "\0",		"\0",       "\0",       "*FR",    "/FR",     "ERROR", 		"\0",     	"\0"  },
-		{"F",   "i",     "ERROR",	"ERROR",    "ERROR",    "ERROR",	"ERROR",   "(E)",   	"ERROR",  	"ERROR"  }
+        {"NT",  "i",     "=",		"+",        "-",        "*",        "/",       "(",     	")",      	";",        "$"},
+        {"S",   "i=E",    "ERROR",   "ERROR",    "ERROR",    "ERROR",     "ERROR",   "ERROR",     "ERROR",   "ERROR",   "\0"  },
+		{"E",   "TQ",    "ERROR",	"ERROR",    "ERROR",    "ERROR",	"ERROR",   "TQ",    	"ERROR",  	"ERROR",    "ERROR"},
+		{"Q",   "ERROR",  "=TQ",	"+TQ",      "-TQ",      "ERROR",    "ERROR",   "ERROR",     "\0",     	"ERROR",    "\0"},
+		{"T",   "FR",     "ERROR",	"ERROR",    "ERROR",    "ERROR",	"ERROR",   "FR",    	"ERROR",  	"ERROR",    "ERROR"},
+		{"R",   "ERROR",  "\0",     "\0",       "\0",       "*FR",      "/FR",     "ERROR", 	"\0",       "ERROR",    "\0"},
+		{"F",   "iZ",     "ERROR",	"ERROR",    "ERROR",    "ERROR",	"ERROR",   "(E)Z",   	"ERROR",  	"ERROR",    "ERROR"},
+        {"Z",   "ERROR",  "\0",     "\0",		"\0",       "\0",       "\0",      "ERROR",     "\0",       ";S",       "ERROR"}
 	};
 
 
@@ -133,19 +141,11 @@ void parser(string input)
     bool failed = false;
     bool isTerminal = false;
 
-	// print current string to process
-	//cout << "\n\tString: " << input << endl;
-    //input.append("$", 1);
-    cout << "\tinput stream: " << input << endl << endl;
+	// append end token "$" and print string to be processed
+    input.append("$", 1);
+    cout << "\n\tinput stream: " << input << endl << endl;
 
-    parseTable.printTable();
-
-
-    // semicolon
-    //if(input[input.length()-1] != ';')
-    //{
-    //    cout << "END OF STRING MARKER SHOULD BE ';'\n";
-    //}
+    //parseTable.printTable();
 
 
     // Begin parsing using stack
@@ -165,20 +165,28 @@ void parser(string input)
 
         a = terminals.at(next);
 
-		cout << "\n--------------------------------------------------------\n";
+		//cout << "\n--------------------------------------------------------\n";
+
+        if(top == DOLLAR && next == DOLLAR){
+            break;
+        }
 
         //check if x is a terminal
         if (terminals.count(top)){
             isTerminal = true;
 
-			cout << "\nTerminal:\n";
-            cout << "\t" << top << endl;
+            //Print out terminal values
+
+			//cout << "\nTerminal:\n";
+            //cout << "\t" << top << endl;
         }else{
             x = getNonTerminal(top);
 
-        	cout << "\nNon-Terminal:\n";
-            cout << "\ttable" << endl << "\t["<< x << "]\t[" << a << "]" << endl;
-            cout << "\t" << top << "\t" << next << endl;
+            //Print out non-terminal and table indexes
+
+        	//cout << "\nNon-Terminal:\n";
+            //cout << "\ttable" << endl << "\t["<< x << "]\t[" << a << "]" << endl;
+            //cout << "\t" << top << "\t" << next << endl;
         }
 
         if (isTerminal){
@@ -187,19 +195,17 @@ void parser(string input)
                 cursor++;
             }
             else {
+                // Error in expected terminal
                 cout << "\nERROR:\n\t" << top << " is terminal but next is "<< next << endl ;
                 failed = true;
             }
         }
         else {
             if (strcmp(parseTable.getTable(x,a),"ERROR") == 0){
+                // error in expected production
                 cout << "\nERROR:\n\t invalid string / production\n";
                 failed = true;
             }
-            //else if (strcmp(table[x][a], "\0") == 0){
-            //    cout << "\nNOTE: epsilon" << endl;
-            //    break;
-            //}
             else{
                 stack.pop();
 
@@ -207,7 +213,6 @@ void parser(string input)
                 strncpy(temp, parseTable.getTable(x,a), 10);
 
 				//print prod rule
-				cout << "\n  Production Rule:\n";
 				if (strcmp(temp, "\0") == 0){
 					cout << "\t" << top << " -> " << EPSILON << endl;
 				}else{

@@ -53,7 +53,7 @@ int main()
 
         string currentLine;
         char *cstr;
-        hasSemicolon = false;
+        //hasSemicolon = false;
 
 
         // display the tokens to the screen
@@ -66,20 +66,24 @@ int main()
             }
 
             //check if has semicolon and don't include in parsing
+            /*
             if (tokens[x].token == ";"){
                 tokens[x].token = '$'; 
                 hasSemicolon = true;
             }
+            */
             cstr = &tokens[x].token[0];
             currentLine.push_back(cstr[0]);
 
         }
         
         // don't parse if missing semicolon
+        /*
         if (!hasSemicolon){
             outfile << "\nERROR:\n\t No Semicolon!\n";
             outfile << "\n##########################################################################\n";
         }else{
+        */
             std::streambuf *oldbuf = std::cout.rdbuf();
             std::cout.rdbuf(outfile.rdbuf()); 
 
@@ -87,7 +91,7 @@ int main()
 
             //reset back to standard input
             std::cout.rdbuf(oldbuf);
-        }
+        //}
         
 
     }

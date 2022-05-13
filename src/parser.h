@@ -166,27 +166,25 @@ void parser(string input)
         a = terminals.at(next);
 
 		//cout << "\n--------------------------------------------------------\n";
-
-        if(top == DOLLAR && next == DOLLAR){
-            break;
-        }
-
+        
         //check if x is a terminal
         if (terminals.count(top)){
             isTerminal = true;
 
             //Print out terminal values
-
-			//cout << "\nTerminal:\n";
-            //cout << "\t" << top << endl;
+			/*
+            cout << "\nTerminal:\n";
+            cout << "\t" << top << endl;
+            */
         }else{
             x = getNonTerminal(top);
 
             //Print out non-terminal and table indexes
-
-        	//cout << "\nNon-Terminal:\n";
-            //cout << "\ttable" << endl << "\t["<< x << "]\t[" << a << "]" << endl;
-            //cout << "\t" << top << "\t" << next << endl;
+            /*
+        	cout << "\nNon-Terminal:\n";
+            cout << "\ttable" << endl << "\t["<< x << "]\t[" << a << "]" << endl;
+            cout << "\t" << top << "\t" << next << endl;
+            */
         }
 
         if (isTerminal){

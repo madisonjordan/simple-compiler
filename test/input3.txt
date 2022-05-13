@@ -1,0 +1,13 @@
+! this is a block comment
+spanning multiple lines !
+
+for (int i = 43; i < 700; i++)
+{
+	do{
+		bool nan = 3.67.4; 
+		// slash slash 
+		if(10%2 == 0){
+			print("is this thing on?");
+		}
+	}while(!true - should be ignored)
+}

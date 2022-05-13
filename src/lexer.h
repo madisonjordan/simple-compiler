@@ -247,7 +247,7 @@ int Get_FSM_Col(char currentChar)
     }
 
     // check for characters
-    else if(isalpha(currentChar) || currentChar == '$')
+    else if(isalpha(currentChar))
     {
         return STRING;
     }

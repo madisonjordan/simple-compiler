@@ -1,0 +1,12 @@
+int a, b, c, d, e, f;
+bool checker;
+
+if (a < b) {
+	a = b;
+	f = d;
+}
+
+while (c > d) {
+	e = f * a + b;
+	c = d + e - c;
+}

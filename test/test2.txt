@@ -1,4 +1,3 @@
-a = b + c; 
 b == d-- c;
-c = b * a;
-d = e / f
+y = u);
+plankton = onePercent*Evil + ninety9percent*hotgas;

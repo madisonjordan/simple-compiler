@@ -32,13 +32,15 @@ enum terminals_list {
 };
 
 enum nonterminals_list{
-    S = 1,
-    E = 2,
-    Q = 3,
-    T = 4,
-    R = 5,
-    F = 6,
-    Z = 7,
+    NT,
+    S,
+    A,
+    E,
+    Q,
+    T,
+    R,
+    F,
+    Z,
 };
 
 
@@ -59,6 +61,9 @@ int getNonTerminal(char c){
     switch(c){
         case 'S':
             return S;
+            break;
+        case 'A':
+            return A;
             break;
         case 'E':
             return E;
@@ -94,19 +99,20 @@ struct ProdRule {
 class ParseTable {
 	private:
 		const static int num_terminal = 10+1;
-		const static int num_nonterm = 8;
+		const static int num_nonterm = 9;
 
 		// INPUTS
 	protected:						
 	char table[num_nonterm][num_terminal][10] = { 
-        {"NT",  "i",     "=",		"+",        "-",        "*",        "/",       "(",     	")",      	";",        "$"},
-        {"S",   "i=E",    "ERROR",   "ERROR",    "ERROR",    "ERROR",    "ERROR",  "ERROR",     "ERROR",   "ERROR",   "\0"  },
-		{"E",   "TQ",    "ERROR",	"ERROR",    "ERROR",    "ERROR",	"ERROR",   "TQ",    	"ERROR",  	"ERROR",    "ERROR"},
-		{"Q",   "ERROR",  "=TQ",	"+TQ",      "-TQ",      "ERROR",    "ERROR",   "ERROR",     "\0",     	"ERROR",    "\0"},
-		{"T",   "FR",     "ERROR",	"ERROR",    "ERROR",    "ERROR",	"ERROR",   "FR",    	"ERROR",  	"ERROR",    "ERROR"},
-		{"R",   "ERROR",  "\0",     "\0",       "\0",       "*FR",      "/FR",     "ERROR", 	"\0",       "ERROR",    "\0"},
-		{"F",   "iZ",     "\0",     "\0",		"\0",       "\0",       "\0",      "(E)Z",   	"\0",  	    "\0",    "\0"},
-        {"Z",   "\0",     "\0",     "\0",		"\0",       "\0",       "\0",      "ERROR",     "\0",       ";S",       "ERROR"}
+        {"NT",  "i",        "=",		"+",        "-",        "*",        "/",       "(",     	")",      	";",        "$"},
+        {"S",   "iA",       "ERROR",    "ERROR",    "ERROR",    "ERROR",    "ERROR",  "ERROR",     "ERROR",   "ERROR",      "\0"  },
+        {"A",   "ERROR",    "=E",       "+E",       "-E",       "*E",       "/E",      "ERROR",     "ERROR",   "ERROR",   "\0"  },
+		{"E",   "TQ",       "ERROR",	"ERROR",    "ERROR",    "ERROR",	"ERROR",   "TQ",    	"ERROR",  	"ERROR",    "ERROR"},
+		{"Q",   "ERROR",    "ERROR",	"+TQ",      "-TQ",      "ERROR",    "ERROR",   "ERROR",     "\0",     	"ERROR",    "\0"},
+		{"T",   "FR",       "ERROR",	"ERROR",    "ERROR",    "ERROR",	"ERROR",   "FR",    	"ERROR",  	"ERROR",    "ERROR"},
+		{"R",   "ERROR",    "ERROR",     "\0",       "\0",       "*FR",      "/FR",     "ERROR", 	"\0",       "ERROR",    "\0"},
+		{"F",   "iZ",       "ERROR",     "\0",		"\0",       "\0",       "\0",      "(E)Z",   	"\0",  	    "\0",    "\0"},
+        {"Z",   "\0",       "ERROR",     "\0",		"\0",       "\0",       "\0",      "ERROR",     "\0",       ";S",       "ERROR"}
 	};
 
 
@@ -150,7 +156,7 @@ void parser(string input, int line_num)
 
     // Begin parsing using stack
     stack.push('$');
-    stack.push('E');
+    stack.push('S');
     
     while (!stack.empty()){
         top = stack.top();

@@ -40,6 +40,7 @@ int main()
     int col = REJECT;
     int currentState = REJECT;
     int prevState = REJECT;
+    int line_num = 0;
     string currentToken = "";
     bool blockComment = false;
     bool hasSemicolon = false;
@@ -47,14 +48,13 @@ int main()
     // use a loop to scan each line in the file
     while (getline(infile, expression))
     {
+        line_num++;
         // use the "Lexer" function to isolate integer, real, operator,
         // string, and unknown tokens
         tokens = lexer(expression, prevState, currentState, currentToken);
 
         string currentLine;
         char *cstr;
-        //hasSemicolon = false;
-
 
         // display the tokens to the screen
         for (unsigned x = 0; x < tokens.size(); ++x)
@@ -65,33 +65,18 @@ int main()
                 tokens[x].token = 'i';
             }
 
-            //check if has semicolon and don't include in parsing
-            /*
-            if (tokens[x].token == ";"){
-                tokens[x].token = '$'; 
-                hasSemicolon = true;
-            }
-            */
             cstr = &tokens[x].token[0];
             currentLine.push_back(cstr[0]);
 
         }
         
-        // don't parse if missing semicolon
-        /*
-        if (!hasSemicolon){
-            outfile << "\nERROR:\n\t No Semicolon!\n";
-            outfile << "\n##########################################################################\n";
-        }else{
-        */
-            std::streambuf *oldbuf = std::cout.rdbuf();
-            std::cout.rdbuf(outfile.rdbuf()); 
+        std::streambuf *oldbuf = std::cout.rdbuf();
+        std::cout.rdbuf(outfile.rdbuf()); 
 
-            parser(currentLine);
+        parser(currentLine, line_num);
 
-            //reset back to standard input
-            std::cout.rdbuf(oldbuf);
-        //}
+        //reset back to standard input
+        std::cout.rdbuf(oldbuf);
         
 
     }

@@ -129,7 +129,7 @@ class ParseTable {
 		}
 };
 
-void parser(string input)
+void parser(string input, int line_num)
 {
 	int a, x;
 	int cursor = 0;
@@ -194,14 +194,16 @@ void parser(string input)
             }
             else {
                 // Error in expected terminal
-                cout << "\nERROR:\n\t" << top << " is terminal but next is "<< next << endl ;
+                cout<< "\nERROR - line " << line_num << endl;
+                cout << "\t Expected terminal: '" << top << "' but next char in input is '"<< next << "'\n";
                 failed = true;
             }
         }
         else {
             if (strcmp(parseTable.getTable(x,a),"ERROR") == 0){
                 // error in expected production
-                cout << "\nERROR:\n\t invalid string / production\n";
+                cout<< "\nERROR - line " << line_num << endl;
+                cout << "\t invalid string / production\n";
                 failed = true;
             }
             else{
